@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+"""
+Download PDF from Sci-hub automatically
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
+import os
+
+from selenium import webdriver
+
+
+path=PaperPath
+os.chdir(path)
+filename='doi.txt'
+file=open(filename,'r')
+
+
+references=[]
+
+for i in file:
+    references.append("https://sci-hub.se/{}".format(i.strip()))
+    
+
+# df.to_excel('references.xlsx')
+#%%
+
+chrome_options = webdriver.ChromeOptions()
+
+prefs = {'profile.default_content_settings.popups': 0, #防止保存弹窗
+"profile.default_content_setting_values.automatic_downloads":1,
+#允许多文件下载
+}
+chrome_options.add_experimental_option('prefs', prefs)
+#修改windows.navigator.webdriver，防机器人识别机制，selenium自动登陆判别机制
+chrome_options.add_experimental_option('excludeSwitches', ['enable-automation']) 
+driver=webdriver.Chrome('C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe',chrome_options=chrome_options)
+
+for doi in references:
+    try:
+        if doi =='None':
+            continue
+        driver.get(doi)
+        driver.implicitly_wait(5)
+        driver.find_element_by_xpath('//*[@id="buttons"]/button').click()
+    except:
+        continue
+    #anaconda
+file.close()
